@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore, collection, getDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -38,3 +39,19 @@ signInWithPopup(auth, provider).then((result) => {
 });
 
 });
+
+const db = getFirestore(app);
+
+const saveBtn = document.querySelector(".save")
+saveBtn.addEventListener("click", async () => {
+    const fruitCollectionRef = collection(db, 'fruits')
+    try {
+    const newFruitRef = await getDoc(fruitCollectionRef, {
+        name: "Apple",
+        color: "red"       
+    })
+    console.log(`Created a new fruit: ${newFruitRef.id}`)
+  }catch (error) {
+    console.log(error)
+  }
+})
